@@ -26,7 +26,7 @@ public class QuoteBot implements SpringLongPollingBot, LongPollingSingleThreadUp
 
     @Override
     public String getBotToken() {
-        return "7965420077:AAHbWeASdkmRtNm1C6E9BAwvIJGUmP77pe4";
+        return "";
     }
 
     @Override
