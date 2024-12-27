@@ -1,5 +1,6 @@
 package org.example;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 
@@ -19,14 +20,16 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class QuoteBot implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
 
     private final TelegramClient telegramClient;
+    private final String token;
 
-    public QuoteBot() {
-        telegramClient = new OkHttpTelegramClient(getBotToken());
+    public QuoteBot(@Value("${token}") String token) {
+        this.token = token;
+        telegramClient = new OkHttpTelegramClient(token);
     }
 
     @Override
     public String getBotToken() {
-        return "";
+        return token;
     }
 
     @Override
@@ -40,11 +43,12 @@ public class QuoteBot implements SpringLongPollingBot, LongPollingSingleThreadUp
             String chat_id = update.getMessage().getChatId().toString();
             String userMessage = update.getMessage().getText();
             if (userMessage.equals("/start")){
-                sendMessage(QuoteMessage.MenuMessage(chat_id));
+                sendMessage(QuoteMenu.MenuMessage(chat_id));
             }
             else{
-                SendMessage message = new SendMessage(chat_id, "Введите команду /start, чтобы начать работу с ботом");
+                SendMessage message = new SendMessage(chat_id, "Вы можете взаимодействовать только с главным меню.");
                 sendMessage(message);
+                sendMessage(QuoteMenu.MenuMessage(chat_id));
             }
         }
         else if (update.hasCallbackQuery()) {
@@ -68,13 +72,13 @@ public class QuoteBot implements SpringLongPollingBot, LongPollingSingleThreadUp
                     sendMessage(message);
                 }
             }
-            sendMessage(QuoteMessage.MenuMessage(chat_id));
+            sendMessage(QuoteMenu.MenuMessage(chat_id));
         }
         else if (update.hasMessage() && !update.getMessage().hasText()){
             String chat_id = update.getMessage().getChatId().toString();
-            String text = "Введите команду /start, чтобы начать работу с ботом";
-            SendMessage message = new SendMessage(chat_id, text);
+            SendMessage message = new SendMessage(chat_id, "Вы можете взаимодействовать только с главным меню.");
             sendMessage(message);
+            sendMessage(QuoteMenu.MenuMessage(chat_id));
         }
     }
 

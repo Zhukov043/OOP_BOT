@@ -63,14 +63,16 @@ public class QuoteServices {
                 }
             }
             else{
-                String[] currencyCode  = new String[] {"GBR", "USD", "EUR", "CNY"};
+                String[] currencyCode  = new String[] {"\uD83C\uDDFA\uD83C\uDDF8USD", "\uD83C\uDDEA\uD83C\uDDFAEUR", "\uD83C\uDDE8\uD83C\uDDF3CNY"};
                 NodeList valuteList = doc.getElementsByTagName("Valute");
+                int j = 0;
                 for (int i = 0; i < valuteList.getLength(); i++) {
                     Node valuteNode = valuteList.item(i);
                     String charCode = valuteNode.getChildNodes().item(1).getTextContent();
                     if(Arrays.stream(currencyCode).anyMatch(s -> s.contains(charCode))) {
                         String value = valuteNode.getChildNodes().item(5).getTextContent();
-                        rates.append(charCode).append(": ").append(" ₽").append(value).append("\n");
+                        rates.append(currencyCode[j]).append(": ").append(" ₽").append(value).append("\n");
+                        j++;
                     }
                 }
             }
